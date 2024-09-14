@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-management-api
+  labels:
+    app: product-management-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-management-api
+  template:
+    metadata:
+      labels:
+        app: product-management-api
+    spec:
+      containers:
+      - name: product-management-api
+        image: productbackendapp:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        env:
+        - name: ConnectionStrings__DefaultConnection
+          value: "Data Source=192.168.100.194,1433;Initial Catalog=ReactNetCoreCrudDb;User Id=sa;Password=database@1;"
+        livenessProbe:
+          httpGet:
+            path: "/"
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: "/"
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
