@@ -4,10 +4,10 @@ namespace ProductManagementAPI.Repositories
 {
     public interface IProductRepository
     {
-        void AddProduct(Product product);
-        void DeleteProduct(int id);
-        List<Product> GetAllProducts();
-        Product GetProductById(int id);
-        void UpdateProduct(Product product);
+        Task<List<Product>> GetAllProductsAsync();
+        Task<Product> GetProductByIdAsync(int id);
+        Task AddProductAsync(Product product);
+        Task UpdateProductAsync(Product product);
+        Task DeleteProductAsync(int id);
     }
 }

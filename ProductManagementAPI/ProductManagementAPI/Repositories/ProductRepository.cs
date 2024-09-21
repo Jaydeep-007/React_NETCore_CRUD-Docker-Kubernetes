@@ -13,17 +13,19 @@ namespace ProductManagementAPI.Repositories
             _context = context;
         }
 
-        public List<Product> GetAllProducts()
+        public async Task<List<Product>> GetAllProductsAsync()
         {
-            return _context.Products.ToList();
+            return await _context.Products.ToListAsync();
         }
 
-        public Product GetProductById(int id)
+        public async Task<Product> GetProductByIdAsync(int id)
         {
-            return _context.Products.FirstOrDefault(p => p.Id == id);
+            return await _context.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public void AddProduct(Product product)
+        public async Task AddProductAsync(Product product)
         {
             if (product == null)
             {
@@ -31,10 +33,10 @@ namespace ProductManagementAPI.Repositories
             }
 
             _context.Products.Add(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateProduct(Product product)
+        public async Task UpdateProductAsync(Product product)
         {
             if (product == null)
             {
@@ -42,20 +44,20 @@ namespace ProductManagementAPI.Repositories
             }
 
             _context.Entry(product).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteProduct(int id)
+        public async Task DeleteProductAsync(int id)
         {
-            var product = _context.Products.Find(id);
+            var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
-                throw new ArgumentNullException(nameof(product));
+                throw new KeyNotFoundException("Product not found.");
             }
 
             _context.Products.Remove(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
+
     }
 }
-

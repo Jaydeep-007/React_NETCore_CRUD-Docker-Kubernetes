@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductManagementAPI.Entities;
 using ProductManagementAPI.Repositories;
 
@@ -7,74 +6,64 @@ namespace ProductManagementAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductController : ControllerBase
+    public class ProductsController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductRepository _repository;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductsController(IProductRepository repository)
         {
-            _productRepository = productRepository;
+            _repository = repository;
         }
 
         [HttpGet]
-        public IActionResult GetAllProducts()
+        public async Task<IActionResult> GetAllProducts()
         {
-            var products = _productRepository.GetAllProducts();
-            return Ok(products);
+            var products = await _repository.GetAllProductsAsync();
+            return Ok(products); // Returns only the list of products
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetProductById(int id)
+        public async Task<IActionResult> GetProductById(int id)
         {
-            var product = _productRepository.GetProductById(id);
+            var product = await _repository.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
-            return Ok(product);
+
+            return Ok(product); // Returns only the product data
         }
 
         [HttpPost]
-        public IActionResult AddProduct([FromBody] Product product)
+        public async Task<IActionResult> AddProduct([FromBody] Product product)
         {
             if (product == null)
             {
                 return BadRequest();
             }
 
-            _productRepository.AddProduct(product);
+            await _repository.AddProductAsync(product);
             return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, product);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProduct(int id, [FromBody] Product product)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product)
         {
             if (product == null || id != product.Id)
             {
                 return BadRequest();
             }
 
-            var existingProduct = _productRepository.GetProductById(id);
-            if (existingProduct == null)
-            {
-                return NotFound();
-            }
-
-            _productRepository.UpdateProduct(product);
+            await _repository.UpdateProductAsync(product);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            var existingProduct = _productRepository.GetProductById(id);
-            if (existingProduct == null)
-            {
-                return NotFound();
-            }
-
-            _productRepository.DeleteProduct(id);
+            await _repository.DeleteProductAsync(id);
             return NoContent();
         }
     }
+
 }

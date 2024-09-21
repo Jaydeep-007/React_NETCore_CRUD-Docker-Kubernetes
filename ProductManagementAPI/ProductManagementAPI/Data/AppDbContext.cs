@@ -7,16 +7,24 @@ namespace ProductManagementAPI.Data
     {
         public DbSet<Product> Products { get; set; }
 
-        protected readonly IConfiguration Configuration;
-
-        public AppDbContext(IConfiguration configuration)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
         {
-            Configuration = configuration;
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            // This check prevents configuring the DbContext if options are already provided
+            if (!optionsBuilder.IsConfigured)
+            {
+                // Configure the in-memory database here, if needed
+                optionsBuilder.UseInMemoryDatabase("InMemoryDb");
+            }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Optionally configure entity mappings here
         }
     }
 }
