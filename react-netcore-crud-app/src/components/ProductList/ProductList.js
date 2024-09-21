@@ -36,10 +36,14 @@ const ProductList = () => {
         <div className="container">
             <h2 className="my-4">Product List</h2>
             <ul className="list-group">
-                {products.map(product => (
-                    <ProductListItem key={product.id} product={product} onDelete={() => handleDelete(product.id)} onEdit={handleEdit} />
-                ))}
-            </ul>
+    {Array.isArray(products) && products.length > 0 ? (
+        products.map(product => (
+            <ProductListItem key={product.id} product={product} onDelete={() => handleDelete(product.id)} onEdit={handleEdit} />
+        ))
+    ) : (
+        <p>No products available</p>
+    )}
+</ul>
         </div>
     );
 };

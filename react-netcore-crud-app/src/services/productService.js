@@ -1,7 +1,7 @@
 // src/services/productService.js
 import axios from 'axios';
 
-//const baseURL = 'https://localhost:7202/api/Product';
+//const baseURL = 'https://localhost:31912/api/products';
 const baseURL = process.env.REACT_APP_API_URL;
 
 const productService = {

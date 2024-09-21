@@ -4,8 +4,12 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import axios from 'axios';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+axios.defaults.timeout = 3000;
+
 root.render(
   <React.StrictMode>
     <App />
