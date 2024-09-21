@@ -6,8 +6,25 @@ const baseURL = process.env.REACT_APP_API_URL;
 
 const productService = {
     getAllProducts: async () => {
-        const response = await axios.get(baseURL);
-        return response.data;
+        try {
+            const response = await axios.get(
+              baseURL,
+              {
+                timeout: 3000,
+                headers: {
+                  Accept: 'application/json',
+                },
+              },
+            );
+        
+            return response.data;
+          } catch (err) {
+            if (err.code === 'ECONNABORTED') {
+              console.log('The request timed out.');
+            } else {
+              console.log(err);
+            }
+          }
     },
     addProduct: async (product) => {
         const response = await axios.post(baseURL, product);
