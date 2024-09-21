@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: backend-config
 data:
-  REACT_APP_API_URL: "http://dotnet-api-service"
+  REACT_APP_API_URL: "http://localhost:30191/api/products"
